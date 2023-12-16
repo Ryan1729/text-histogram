@@ -14,6 +14,13 @@ body{
 <body>
 <form id="the-form">
   <input id="the-input" name="the-input" required />
+
+  <label for="skip-numbers">Skip Numbers</label>
+  <input type="checkbox" id="skip-numbers" name="skip-numbers" checked="true" />
+
+  <label for="normalize-to-lowercase">Normalize to lowercase</label>
+  <input type="checkbox" id="normalize-to-lowercase" name="normalize-to-lowercase" checked="true" />
+
   <button id="the-submit-button" type="submit">Submit</button>
 </form>
 <div id="the-list"></div>
@@ -21,6 +28,8 @@ body{
 <script>
 const urlForm = document.getElementById("the-form")
 const wordsInput = document.getElementById("the-input")
+const skipNumbersCheckbox = document.getElementById("skip-numbers")
+const lowercaseCheckbox = document.getElementById("normalize-to-lowercase")
 const listParent = document.getElementById("the-list")
 
 function onSubmit(event){
@@ -31,9 +40,24 @@ function onSubmit(event){
 
         const words = text.match(/\w+/g);
 
+        const skipNumbers = skipNumbersCheckbox.checked
+        const lowercase = lowercaseCheckbox.checked
+
         const histogram = {}
 
         for (word of words) {
+            if (skipNumbers) {
+                // Oh Javascript, Javascript, Javascript ...
+                const isANumber = !isNaN(Number.parseFloat(word))
+                if (isANumber) {
+                    continue
+                }
+            }
+
+            if (lowercase) {
+                word = word.toLowerCase()
+            }
+
             if (histogram[word] === undefined) {
                 histogram[word] = 1
             } else {
