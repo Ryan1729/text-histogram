@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+body{
+    line-height:1.6;
+    font-size:18px;
+    color:#eee;
+    background-color:#222;
+}
+</style>
+</head>
+<body>
+<form id="the-form">
+  <input id="the-input" name="the-input" required />
+  <button id="the-submit-button" type="submit">Submit</button>
+</form>
+<div id="the-list"></div>
+</body>
+<script>
+const urlForm = document.getElementById("the-form")
+const wordsInput = document.getElementById("the-input")
+const listParent = document.getElementById("the-list")
+
+function onSubmit(event){
+    event.preventDefault()
+
+    async function fillList() {
+        const text = wordsInput.value;
+
+        const words = text.match(/\w+/g);
+
+        const histogram = {}
+
+        for (word of words) {
+            if (histogram[word] === undefined) {
+                histogram[word] = 1
+            } else {
+                histogram[word] += 1
+            }
+        }
+
+        const entries = Object.entries(histogram)
+
+        entries.sort((a, b) => {
+            const countA = a[1]
+            const countB = b[1]
+
+            const countCompare = countA - countB
+            if (countCompare != 0) {
+                return countCompare
+            }
+
+            const wordA = a[0]
+            const wordB = b[0]
+
+            if (wordA < wordB) {
+                return -1
+            }
+            if (wordA > wordB) {
+                return 1
+            }
+
+            return 0
+        })
+
+        listParent.textContent = ""
+
+        for ([word, count] of entries) {
+            const p = document.createElement("p")
+
+            p.textContent = word + ": " + count
+
+            listParent.appendChild(p)
+        }
+    }
+    fillList()
+}
+
+urlForm.onsubmit = onSubmit
+
+</script>
+</html>
