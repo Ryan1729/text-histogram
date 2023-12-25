@@ -38,7 +38,9 @@ function onSubmit(event){
     async function fillList() {
         const text = wordsInput.value;
 
-        const words = text.match(/\w+/g);
+        const words = text.match(/[\w']+/g)
+            .map(word => word.replaceAll("^'|'$", ""))
+            .filter(word => word.length > 0);
 
         const skipNumbers = skipNumbersCheckbox.checked
         const lowercase = lowercaseCheckbox.checked
