@@ -38,8 +38,12 @@ function onSubmit(event){
     async function fillList() {
         const text = wordsInput.value;
 
-        const words = text.match(/[\w']+/g)
-            .map(word => word.replaceAll("^'|'$", ""))
+        const words = text.match(/[\w'‘’‛]+/g)
+            .map(word =>
+                word
+                    .replaceAll(/‘|’|‛/g, "'")
+                    .replaceAll(/^'|'$/g, "")
+            )
             .filter(word => word.length > 0);
 
         const skipNumbers = skipNumbersCheckbox.checked
